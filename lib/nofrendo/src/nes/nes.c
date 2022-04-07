@@ -26,22 +26,22 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <noftypes.h>
-#include "nes6502.h"
+#include "../noftypes.h"
+#include "../cpu/nes6502.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "soc/timer_group_struct.h"
 #include "soc/timer_group_reg.h"
-#include <log.h>
-#include <osd.h>
-#include <gui.h>
-#include <nes.h>
-#include <nes_apu.h>
-#include <nes_ppu.h>
-#include <nes_rom.h>
-#include <nes_mmc.h>
-#include <vid_drv.h>
-#include <nofrendo.h>
+#include "../log.h"
+#include "../osd.h"
+#include "../gui.h"
+#include "nes.h"
+#include "../sndhrdw/nes_apu.h"
+#include "nes_ppu.h"
+#include "nes_rom.h"
+#include "nes_mmc.h"
+#include "../vid_drv.h"
+#include "../nofrendo.h"
 
 #define NES_CLOCK_DIVIDER 12
 //#define  NES_MASTER_CLOCK     21477272.727272727272
@@ -274,10 +274,10 @@ static void build_address_handlers(nes_t *machine)
 /* raise an IRQ */
 void nes_irq(void)
 {
-#ifdef NOFRENDO_DEBUG
+#if CONFIG_NOFRENDO_DEBUG
 //   if (nes.scanline <= NES_SCREEN_HEIGHT)
 //      memset(nes.vidbuf->line[nes.scanline - 1], GUI_RED, NES_SCREEN_WIDTH);
-#endif /* NOFRENDO_DEBUG */
+#endif /* NOFRENDO_DECONFIG_NOFRENDO_DEBUGBUG */
 
    nes6502_irq();
 }

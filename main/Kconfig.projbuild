@@ -1,0 +1,122 @@
+menu "NES Component Settings"
+    config HW_LCD_MISO_GPIO
+        int "LCD SPI MISO PIN"
+        default 12
+    config HW_LCD_MOSI_GPIO
+        int "LCD SPI MOSI PIN"
+        default 13
+    config HW_LCD_CLK_GPIO
+        int "LCD SPI CLK PIN"
+        default 14
+    config HW_LCD_CS_GPIO
+        int "LCD SPI CS PIN"
+        default 15
+    config HW_LCD_DC_GPIO
+        int "LCD SPI DC PIN"
+        default 21
+    config HW_LCD_RESET_GPIO
+        int "LCD SPI RESET PIN"
+        default 22   
+    config HW_LCD_BL_GPIO
+        int "LCD SPI BL PIN"
+        default 27
+    config SOUND_ENABLED
+        bool "SOUND ENABLED"
+        default y
+    config NOFRENDO_DEBUG
+        bool "DEBUG"
+        default y
+    config HW_CONTROLLER_PSX
+        bool "PSX Controller"
+        default n
+    config HW_PSX_CLK
+        int "PSX Controller CLK"
+        default 14
+    config HW_PSX_DAT
+        int "PSX Controller DAT/MISO"
+        default 12
+    config HW_PSX_CMD
+        int "PSX Controller CMD/MOSI"
+        default 13
+    config HW_PSX_ATT
+        int "PSX Controller ATT/CS"
+        default 12
+    config HW_CONTROLLER_GPIO
+        bool "GPIO Controller"
+        default y
+    config HW_GPIO_UP
+        int "GPIO Controller Up"
+        default 34
+    config HW_GPIO_DOWN
+        int "GPIO Controller Down"
+        default 33
+    config HW_GPIO_RIGHT
+        int "GPIO Controller Right"
+        default 32
+    config HW_GPIO_LEFT
+        int "GPIO Controller Left"
+        default 39
+    config HW_GPIO_SELECT
+        int "GPIO Controller Select"
+        default 17
+    config HW_GPIO_START
+        int "GPIO Controller Start"
+        default 16
+    config HW_GPIO_B
+        int "GPIO Controller B"
+        default 35
+    config HW_GPIO_A
+        int "GPIO Controller A"
+        default 26
+    config HW_GPIO_TURBO_B
+        int "GPIO Controller Turbo B"
+        default 25
+    config HW_GPIO_TURBO_A
+        int "GPIO Controller Turbo A"
+        default 4
+    config HW_GPIO_MENU
+        int "GPIO Controller Menu"
+        default 2
+    config HW_GPIO_POWER
+        int "GPIO Controller Power"
+        default 36
+    config SD_CARD
+        bool "Use SD Card"
+        default n
+    config SD_CS
+        int "SD Card CS"
+        default 5
+    config SD_MOSI
+        int "SD Card MOSI"
+        default 23
+    config SD_MISO
+        int "SD Card MISO"
+        default 19
+    config SD_SCK
+        int "SD Card SCK"
+        default 18
+    
+    
+
+    choice LCD_TYPE
+        prompt "LCD module type"
+        default LCD_TYPE_AUTO
+        help
+            The type of LCD on the evaluation board.
+    config LCD_TYPE_AUTO
+        bool "Auto detect"
+    config LCD_TYPE_ST7789V
+        bool "ST7789V (WROVER Kit v2 or v3)"
+    config LCD_TYPE_ILI9341
+        bool "ILI9341 (WROVER Kit v1 or DevKitJ v1)"
+    endchoice
+    
+    config LCD_OVERCLOCK
+        bool
+        prompt "Run LCD at higher clock speed than allowed"
+        default "n"
+        help
+            The ILI9341 and ST7789 specify that the maximum clock speed for the SPI interface is 10MHz. However,
+            in practice the driver chips work fine with a higher clock rate, and using that gives a better framerate.
+            Select this to try using the out-of-spec clock rate.
+endmenu

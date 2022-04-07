@@ -62,20 +62,20 @@ typedef enum
 #endif
 #endif /* !__cplusplus */
 
-#include <memguard.h>
-#include <log.h>
+#include "memguard.h"
+#include "log.h"
 
-#ifdef NOFRENDO_DEBUG
+#if CONFIG_NOFRENDO_DEBUG
 
 #define  ASSERT(expr)      log_assert((int) (expr), __LINE__, __FILE__, NULL)
 #define  ASSERT_MSG(msg)   log_assert(false, __LINE__, __FILE__, (msg))
 
-#else /* !NOFRENDO_DEBUG */
+#else /* !CONFIG_NOFRENDO_DEBUG */
 
 #define  ASSERT(expr)
 #define  ASSERT_MSG(msg)
 
-#endif /* !NOFRENDO_DEBUG */
+#endif /* !CONFIG_NOFRENDO_DEBUG */
 
 #endif /* _TYPES_H_ */
 

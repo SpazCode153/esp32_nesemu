@@ -26,19 +26,19 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdarg.h>
-#include <noftypes.h>
-#include <nes_ppu.h>
-#include <nes_apu.h>
-#include <nesinput.h>
-#include <nes.h>
-#include <log.h>
-#include <osd.h>
+#include "noftypes.h"
+#include "nes/nes_ppu.h"
+#include "sndhrdw/nes_apu.h"
+#include "nes/nesinput.h"
+#include "nes/nes.h"
+#include "log.h"
+#include "osd.h"
 
-#include <bitmap.h>
+#include "bitmap.h"
 
-#include <gui.h>
-#include <gui_elem.h>
-#include <vid_drv.h>
+#include "gui.h"
+#include "gui_elem.h"
+#include "vid_drv.h"
 
 /* TODO: oh god */
 /* 8-bit GUI color table */
@@ -61,8 +61,8 @@ rgb_t gui_pal[GUI_TOTALCOLORS] =
 };
 
 /**************************************************************/
-#include <pcx.h>
-#include <nesstate.h>
+#include "pcx.h"
+#include "nes/nesstate.h"
 static bool option_drawsprites = true;
 
 /* save a PCX snapshot */
@@ -344,7 +344,7 @@ void gui_tick(int ticks)
 /* updated in sync with the timer interrupt */
 static void gui_tickdec(void)
 {
-#ifdef NOFRENDO_DEBUG
+#if CONFIG_NOFRENDO_DEBUG
    static int hertz_ticks = 0;
 #endif
    int ticks = gui_ticks;
@@ -354,7 +354,7 @@ static void gui_tickdec(void)
 
    gui_ticks = 0;
 
-#ifdef NOFRENDO_DEBUG
+#if CONFIG_NOFRENDO_DEBUG
    /* Check for corrupt memory block every 10 seconds */
    hertz_ticks += ticks;
    if (hertz_ticks >= (10 * gui_refresh))
@@ -588,7 +588,7 @@ void gui_sendmsg(int color, char *format, ...)
    va_start(arg, format);
    vsprintf(msg.text, format, arg);
 
-#ifdef NOFRENDO_DEBUG
+#if CONFIG_NOFRENDO_DEBUG
    log_print("GUI: ");
    log_print(msg.text);
    log_print("\n");

@@ -40,3 +40,5 @@ void setXStretch(bool str);
 void setYStretch(bool str);
 
 void setBright(int bright);
+
+void initGPIO(int gpioNo);

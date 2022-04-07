@@ -23,11 +23,11 @@
 ** $Id: map024.c,v 1.2 2001/04/27 14:37:11 neil Exp $
 */
 
-#include <noftypes.h>
-#include <nes_mmc.h>
-#include <nes.h>
-#include <log.h>
-#include <vrcvisnd.h>
+#include "../noftypes.h"
+#include "../nes/nes_mmc.h"
+#include "../nes/nes.h"
+#include "../log.h"
+#include "../sndhrdw/vrcvisnd.h"
 
 static struct
 {
@@ -146,7 +146,7 @@ static void map24_write(uint32 address, uint8 value)
       break;
    
    default:
-#ifdef NOFRENDO_DEBUG
+#if CONFIG_NOFRENDO_DEBUG
       log_printf("invalid VRC6 write: $%02X to $%04X", value, address);
 #endif
       break;      

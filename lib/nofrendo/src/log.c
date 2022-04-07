@@ -26,15 +26,15 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdarg.h>
-#include <noftypes.h>
-#include <log.h>
+#include "noftypes.h"
+#include "log.h"
 
 
 //static FILE *errorlog = NULL;
 static int (*log_func)(const char *string) = NULL;
 
 /* first up: debug versions of calls */
-#ifdef NOFRENDO_DEBUG
+#if CONFIG_NOFRENDO_DEBUG
 int log_init(void)
 {
 //   errorlog = fopen("errorlog.txt", "wt");
@@ -88,7 +88,7 @@ int log_printf(const char *format, ... )
    return 0; /* should be number of chars written */
 }
 
-#else /* !NOFRENDO_DEBUG */
+#else /* !CONFIG_NOFRENDO_DEBUG */
 
 int log_init(void)
 {
@@ -112,7 +112,7 @@ int log_printf(const char *format, ... )
 
    return 0; /* should be number of chars written */
 }
-#endif /* !NOFRENDO_DEBUG */
+#endif /* !CONFIG_NOFRENDO_DEBUG */
 
 void log_chain_logfunc(int (*func)(const char *string))
 {

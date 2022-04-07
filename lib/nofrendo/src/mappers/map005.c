@@ -23,11 +23,11 @@
 ** $Id: map005.c,v 1.2 2001/04/27 14:37:11 neil Exp $
 */
 
-#include <noftypes.h>
-#include <nes_mmc.h>
-#include <nes.h>
-#include <log.h>
-#include "mmc5_snd.h"
+#include "../noftypes.h"
+#include "../nes/nes_mmc.h"
+#include "../nes/nes.h"
+#include "../log.h"
+#include "../sndhrdw/mmc5_snd.h"
 
 /* TODO: there's lots of info about this mapper now;
 ** let's implement it correctly/completely
@@ -200,9 +200,9 @@ static void map5_write(uint32 address, uint8 value)
       break;
 
    default:
-#ifdef NOFRENDO_DEBUG
+#if CONFIG_NOFRENDO_DEBUG
       log_printf("unknown mmc5 write: $%02X to $%04X\n", value, address);
-#endif /* NOFRENDO_DEBUG */
+#endif /* CONFIG_NOFRENDO_DEBUG */
       break;
    }
 }
@@ -217,7 +217,7 @@ static uint8 map5_read(uint32 address)
    }
    else
    {
-#ifdef NOFRENDO_DEBUG
+#if CONFIG_NOFRENDO_DEBUG
       log_printf("invalid MMC5 read: $%04X", address);
 #endif
       return 0xFF;

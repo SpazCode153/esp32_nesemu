@@ -15,9 +15,9 @@
 #include "decode_image.h"
 #include "driver/gpio.h"
 #include "charPixels.c"
-#include "esp_deep_sleep.h"
+#include "esp_sleep.h"
 #include "menu.h"
-#include "psxcontroller.h"
+#include "../../nofrendo/src/esp32/psxcontroller.h"
 
 uint16_t **pixels;
 int newX;
@@ -230,10 +230,10 @@ void drawRows(uint16_t *dest, int y, int rowCount)
 	}
 }
 
-// void initGPIO(int gpioNo){
-// 	gpio_set_direction(gpioNo, GPIO_MODE_INPUT);
-// 	gpio_pulldown_en(gpioNo);
-// }
+void initGPIO(int gpioNo){
+	gpio_set_direction(gpioNo, GPIO_MODE_INPUT);
+	gpio_pulldown_en(gpioNo);
+}
 
 void freeMem()
 {

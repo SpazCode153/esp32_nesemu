@@ -1,7 +1,7 @@
 #include "freertos/FreeRTOS.h"
 #include "esp_system.h"
 #include "esp_event.h"
-#include "esp_event_loop.h"
+#include "esp_event.h"
 #include "esp_partition.h"
 #include "esp_err.h"
 // #include "driver/spi_master.h"
@@ -13,9 +13,9 @@
 #include "esp_spiffs.h"
 #include "nvs_flash.h"
 #include "driver/gpio.h"
-#include "psxcontroller.h"
-#include "nofrendo.h"
-#include "menu.h"
+#include "../lib/nofrendo/src/esp32/psxcontroller.h"
+#include "../lib/nofrendo/src/nofrendo.h"
+#include "../lib/menu/src/menu.h"
 // #include "esp_bt.h"
 
 #define READ_BUFFER_SIZE 64
@@ -107,23 +107,52 @@ esp_err_t event_handler(void *ctx, system_event_t *event)
 esp_err_t registerSdCard()
 {
 	esp_err_t ret;
-	sdmmc_host_t host = SDSPI_HOST_DEFAULT();
-	// host.command_timeout_ms=200;
-	// host.max_freq_khz = SDMMC_FREQ_PROBING;
-	sdspi_slot_config_t slot_config = SDSPI_SLOT_CONFIG_DEFAULT();
-	slot_config.gpio_miso =  CONFIG_SD_MISO;
-	slot_config.gpio_mosi =  CONFIG_SD_MOSI;
-	slot_config.gpio_sck =   CONFIG_SD_SCK;
-	slot_config.gpio_cs =    CONFIG_SD_CS;
-	slot_config.dma_channel = 2; //2
+
 	esp_vfs_fat_sdmmc_mount_config_t mount_config = {
-		.format_if_mount_failed = false,
-		.max_files = 2};
+        .format_if_mount_failed = true,
+        .max_files = 2,
+        .allocation_unit_size = 16 * 1024
+    };
 
 	sdmmc_card_t *card;
-	//!TODO: Evil hack... don't use spiffs here!
-	ret = esp_vfs_fat_sdmmc_mount("/spiffs", &host, &slot_config, &mount_config, &card);
-	ASSERT_ESP_OK(ret, "Failed to mount SD card");
+    const char mount_point[] = "/spiffs";
+    ESP_LOGI("registerSdCard", "Initializing SD card");
+
+	ESP_LOGI("registerSdCard", "Using SPI peripheral");
+
+	sdmmc_host_t host = SDSPI_HOST_DEFAULT();
+	spi_bus_config_t bus_cfg = {
+        .mosi_io_num = CONFIG_SD_MOSI,
+        .miso_io_num = CONFIG_SD_MISO,
+        .sclk_io_num = CONFIG_SD_SCK,
+        .quadwp_io_num = -1,
+        .quadhd_io_num = -1,
+        .max_transfer_sz = 4000,
+    };
+
+	ret = spi_bus_initialize(host.slot, &bus_cfg, 2);
+    if (ret != ESP_OK) {
+        ESP_LOGE("registerSdCard", "Failed to initialize bus.");
+    }
+
+	sdspi_device_config_t slot_config = SDSPI_DEVICE_CONFIG_DEFAULT();
+    slot_config.gpio_cs = CONFIG_SD_CS;
+    slot_config.host_id = host.slot;
+
+	ESP_LOGI("registerSdCard", "Mounting filesystem");
+    ret = esp_vfs_fat_sdspi_mount(mount_point, &host, &slot_config, &mount_config, &card);
+
+	if (ret != ESP_OK) {
+        if (ret == ESP_FAIL) {
+            ESP_LOGE("registerSdCard", "Failed to mount filesystem. "
+                     "If you want the card to be formatted, set the EXAMPLE_FORMAT_IF_MOUNT_FAILED menuconfig option.");
+        } else {
+            ESP_LOGE("registerSdCard", "Failed to initialize the card (%s). "
+                     "Make sure SD card lines have pull-up resistors in place.", esp_err_to_name(ret));
+        }
+        return;
+    }
+    ESP_LOGI("registerSdCard", "Filesystem mounted");
 
     // Card has been initialized, print its properties
     sdmmc_card_print_info(stdout, card);
@@ -177,11 +206,20 @@ esp_err_t registerSpiffs()
 		.base_path = "/spiffs",
 		.partition_label = NULL,
 		.max_files = 32,
-		.format_if_mount_failed = false};
+		.format_if_mount_failed = true};
 
 	esp_err_t ret = esp_vfs_spiffs_register(&conf);
 
 	ASSERT_ESP_OK(ret, "Failed to mount SPIFFS partition.");
+	if (ret != ESP_OK) {
+        if (ret == ESP_FAIL) {
+            ESP_LOGE("registerSpiffs", "Failed to mount or format filesystem");
+        } else if (ret == ESP_ERR_NOT_FOUND) {
+            ESP_LOGE("registerSpiffs", "Failed to find SPIFFS partition");
+        } else {
+            ESP_LOGE("registerSpiffs", "Failed to initialize SPIFFS (%s)", esp_err_to_name(ret));
+        }
+    }
 	struct stat st;
 	if (stat(ROM_LIST, &st) != 0)
 	{
@@ -190,14 +228,14 @@ esp_err_t registerSpiffs()
 	return ret;
 }
 
-int app_main(void)
+void app_main(void)
 {
 // esp_bt_controller_mem_release(ESP_BT_MODE_CLASSIC_BT);
-#ifdef CONFIG_SD_CARD
+//#if CONFIG_SD_CARD
 	ASSERT_ESP_OK(registerSdCard(), "Unable to register SD Card");
-#else
-	ASSERT_ESP_OK(registerSpiffs(), "Unable to register SPIFFS");
-#endif
+// #else
+// 	ASSERT_ESP_OK(registerSpiffs(), "Unable to register SPIFFS");
+// #endif
 	psxcontrollerInit();
 #ifndef SKIP_MENU
 	selectedRomFilename = runMenu();
@@ -206,5 +244,4 @@ int app_main(void)
 	nofrendo_main(0, NULL);
 	printf("NoFrendo died? WtF?\n");
 	asm("break.n 1");
-	return 0;
 }

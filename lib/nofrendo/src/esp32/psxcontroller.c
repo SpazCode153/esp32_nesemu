@@ -22,8 +22,8 @@
 #include "soc/gpio_struct.h"
 #include "psxcontroller.h"
 #include "sdkconfig.h"
-#include "pretty_effect.h"
-#include "esp_deep_sleep.h"
+#include "../../../menu/src/pretty_effect.h"
+#include "esp_sleep.h"
 
 #define PSX_CLK CONFIG_HW_PSX_CLK
 #define PSX_DAT CONFIG_HW_PSX_DAT

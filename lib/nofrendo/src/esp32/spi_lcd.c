@@ -28,8 +28,8 @@
 #include "spi_lcd.h"
 #include "psxcontroller.h"
 #include "driver/ledc.h"
-#include "pretty_effect.h"
-#include "nes.h"
+#include "../../../menu/src/pretty_effect.h"
+#include "../nes/nes.h"
 
 #define PIN_NUM_MISO CONFIG_HW_LCD_MISO_GPIO
 #define PIN_NUM_MOSI CONFIG_HW_LCD_MOSI_GPIO
@@ -62,14 +62,12 @@
 #define LCD_TYPE_ILI 0
 #define LCD_TYPE_ST 1
 
-#define waitForSPIReady()                                 \
-    while (READ_PERI_REG(SPI_CMD_REG(SPI_NUM)) & SPI_USR) \
-        ;
+#define waitForSPIReady() while (READ_PERI_REG(SPI_CMD_REG(SPI_NUM)) & SPI_USR);
 
 ledc_channel_config_t ledc_channel;
 
 #if PIN_NUM_BCKL >= 0
-*void initBCKL()
+void initBCKL()
 {
     ledc_timer_config_t ledc_timer = {
         .duty_resolution = LEDC_TIMER_13_BIT,
@@ -381,7 +379,7 @@ static void ili_gpio_init()
     PIN_FUNC_SELECT(GPIO_PIN_MUX_REG[PIN_NUM_DC], 2);  //DC PIN
     PIN_FUNC_SELECT(GPIO_PIN_MUX_REG[PIN_NUM_RST], 2); //RESET PIN
 #if PIN_NUM_BCKL >= 0
-    PIN_FUNC_SELECT(GPIO_PIN_MUX_REG[PIN_NUM_BCKL, 2);  //BKL PIN
+    PIN_FUNC_SELECT(GPIO_PIN_MUX_REG[PIN_NUM_BCKL], 2);  //BKL PIN
     WRITE_PERI_REG(GPIO_ENABLE_W1TS_REG, 1 << PIN_NUM_DC | 1 << PIN_NUM_RST | 1 << PIN_NUM_BCKL);
 #else
     WRITE_PERI_REG(GPIO_ENABLE_W1TS_REG, 1 << PIN_NUM_DC | 1 << PIN_NUM_RST);

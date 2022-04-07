@@ -27,15 +27,15 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <noftypes.h>
-#include <nes_rom.h>
-#include <intro.h>
-#include <nes_mmc.h>
-#include <nes_ppu.h>
-#include <nes.h>
-#include <gui.h>
-#include <log.h>
-#include <osd.h>
+#include "../noftypes.h"
+#include "nes_rom.h"
+#include "../intro.h"
+#include "nes_mmc.h"
+#include "nes_ppu.h"
+#include "nes.h"
+#include "../gui.h"
+#include "../log.h"
+#include "../osd.h"
 
 extern char *osd_getromdata();
 
@@ -272,7 +272,7 @@ static FILE *rom_findrom(const char *filename, rominfo_t *rominfo)
 /* Add ROM name to a list with dirty headers */
 static int rom_adddirty(char *filename)
 {
-#ifdef NOFRENDO_DEBUG
+#if CONFIG_NOFRENDO_DEBUG
 #define  MAX_BUFFER_LENGTH    255
    char buffer[MAX_BUFFER_LENGTH + 1];
    bool found = false;
@@ -299,7 +299,7 @@ static int rom_adddirty(char *filename)
    }
 
    fclose(fp);
-#endif /* NOFRENDO_DEBUG */
+#endif /* CONFIG_NOFRENDO_DEBUG */
 
    return 0;
 }
@@ -446,7 +446,9 @@ rominfo_t *rom_load(const char *filename)
 
    rominfo = malloc(sizeof(rominfo_t));
    if (NULL == rominfo)
+   {
       return NULL;
+   }
 
    memset(rominfo, 0, sizeof(rominfo_t));
 
@@ -454,7 +456,9 @@ rominfo_t *rom_load(const char *filename)
 
    /* Get the header and stick it into rominfo struct */
 	if (rom_getheader(&rom, rominfo))
+   {
       goto _fail;
+   }
 
    /* Make sure we really support the mapper */
    if (false == mmc_peek(rominfo->mapper_number))
@@ -468,12 +472,16 @@ rominfo_t *rom_load(const char *filename)
    ** UNIF, TAKE ME AWAY!  AAAAAAAAAA!!!
    */
    if (rom_allocsram(rominfo))
+   {
       goto _fail;
 
       rom_loadtrainer(&rom, rominfo);
+   }
 
 	if (rom_loadrom(&rom, rominfo))
+   {
       goto _fail;
+   }
 
    rom_loadsram(rominfo);
 

@@ -20,13 +20,13 @@
 #include <sys/types.h>
 #include <unistd.h>
        
-#include <noftypes.h>
-#include <nofconfig.h>
-#include <log.h>
-#include <osd.h>
-#include <nofrendo.h>
+#include "../noftypes.h"
+#include "../nofconfig.h"
+#include "../log.h"
+#include "../osd.h"
+#include "../nofrendo.h"
 
-#include <version.h>
+#include "../version.h"
 
 extern char* selectedRomFilename;
 char configfilename[]="na";

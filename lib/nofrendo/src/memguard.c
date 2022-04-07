@@ -25,8 +25,8 @@
 ** $Id: memguard.c,v 1.2 2001/04/27 14:37:11 neil Exp $
 */
 
-#include <noftypes.h>
-#include <memguard.h>
+#include "noftypes.h"
+#include "memguard.h"
 
 /* undefine macro definitions, so we get real calls */
 #undef malloc
@@ -35,7 +35,7 @@
 
 #include <string.h>
 #include <stdlib.h>
-#include <log.h>
+#include "log.h"
 
 
 /* Maximum number of allocated blocks at any one time */
@@ -54,7 +54,7 @@ typedef struct memblock_s
 bool mem_debug = true;
 
 
-#ifdef NOFRENDO_DEBUG
+#if CONFIG_NOFRENDO_DEBUG
 
 static int mem_blockcount = 0;   /* allocated block count */
 static memblock_t *mem_record = NULL;
@@ -242,10 +242,10 @@ static void mem_deleteblock(void *data, char *file, int line)
            (uint32) data, line, file);
    ASSERT_MSG(fail);
 }
-#endif /* NOFRENDO_DEBUG */
+#endif /* CONFIG_NOFRENDO_DEBUG */
 
 /* debugger-friendly versions of calls */
-#ifdef NOFRENDO_DEBUG
+#if CONFIG_NOFRENDO_DEBUG
 
 /* allocates memory and clears it */
 void *_my_malloc(int size, char *file, int line)
@@ -326,7 +326,7 @@ char *_my_strdup(const char *string, char *file, int line)
    return temp;
 }
 
-#else /* !NOFRENDO_DEBUG */
+#else /* !CONFIG_NOFRENDO_DEBUG */
 
 /* allocates memory and clears it */
 void *_my_malloc(int size)
@@ -377,12 +377,12 @@ char *_my_strdup(const char *string)
    return temp;
 }
 
-#endif /* !NOFRENDO_DEBUG */
+#endif /* !CONFIG_NOFRENDO_DEBUG */
 
 /* check for orphaned memory handles */
 void mem_checkleaks(void)
 {
-#ifdef NOFRENDO_DEBUG
+#if CONFIG_NOFRENDO_DEBUG
    int i;
 
    if (false == mem_debug || NULL == mem_record)
@@ -409,12 +409,12 @@ void mem_checkleaks(void)
    }
    else
       log_printf("no memory leaks\n");
-#endif /* NOFRENDO_DEBUG */
+#endif /* CONFIG_NOFRENDO_DEBUG */
 }
 
 void mem_checkblocks(void)
 {
-#ifdef NOFRENDO_DEBUG
+#if CONFIG_NOFRENDO_DEBUG
    int i;
 
    if (false == mem_debug || NULL == mem_record)
@@ -434,7 +434,7 @@ void mem_checkblocks(void)
          }
       }
    }
-#endif /* NOFRENDO_DEBUG */
+#endif /* CONFIG_NOFRENDO_DEBUG */
 }
 
 /*

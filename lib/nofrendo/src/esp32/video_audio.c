@@ -18,26 +18,26 @@
 #include <freertos/queue.h>
 #include "soc/timer_group_struct.h"
 #include "soc/timer_group_reg.h"
-#include "pretty_effect.h"
+#include "../../../menu/src/pretty_effect.h"
 #include <math.h>
 #include <string.h>
-#include <noftypes.h>
-#include <bitmap.h>
-#include <nofconfig.h>
-#include <event.h>
-#include <gui.h>
-#include <log.h>
-#include <nes.h>
-#include <sndhrdw/nes_apu.h>
-#include <nes_pal.h>
-#include <nesinput.h>
-#include <osd.h>
+#include "../noftypes.h"
+#include "../bitmap.h"
+#include "../nofconfig.h"
+#include "../event.h"
+#include "../gui.h"
+#include "../log.h"
+#include "../nes/nes.h"
+#include "../sndhrdw/nes_apu.h"
+#include "../nes/nes_pal.h"
+#include "../nes/nesinput.h"
+#include "../osd.h"
 #include <stdint.h>
 #include "driver/i2s.h"
-#include "sdkconfig.h"
-#include <spi_lcd.h>
+//#include "../../../../main/sdkconfig.h"
+#include "spi_lcd.h"
 
-#include <psxcontroller.h>
+#include "psxcontroller.h"
 
 #define AUDIO_SAMPLERATE 22050
 #define AUDIO_BUFFER_LENGTH 64

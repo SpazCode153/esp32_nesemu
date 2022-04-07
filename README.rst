@@ -1,23 +1,22 @@
 ESP32-NESEMU, a Nintendo Entertainment System emulator for the ESP32
 ====================================================================
 
-This is fork from the repository badvision/esp32_nesemu which is based on the espressif's nesemu port. I created this fork as the repository badvision/esp32_nesemu was updated a long time ago
-and I struggled to build it using VSCode and EDP-IDF 4.4. I tried to use PlatformIO but that too gave alot of errors when building so I "converted" the source code to use
+This is fork from the repository badvision/esp32_nesemu which is based on the espressif's nesemu port. I created this fork as I struggled to build it using VSCode and EDP-IDF 4.4. I tried to use PlatformIO but that too gave alot of errors when building so I "converted" the source code to use
 just VSCode and the ESP-IDF. 
 
-Please note I am still learning C and C++ therefor the way that I have done the Includes and CMakeLists.txt may be incorrect but it works. For now please review the badvision/esp32_nesemu for additional
-information until I have update all the information here.
+Please note I am still learning C and C++ therefor the way that I have done the Includes and CMakeLists.txt may be incorrect but it works. Please review the badvision/esp32_nesemu for additional
+information.
 
 Compiling
 ---------
 
 Use VSCode with the ESP-IDF 4.4 framework and extension. Please alter the pin settings in the SDK configuration under the menu "NES Component Settings". At moment the code 
-only works with a SD card, I am busy working on all the settings.
+only works with a SD card.
 
 Display
 -------
 
-To display the NES output, please connect a 320x240 ili9341-based SPI display to the ESP32, specify the pins in teh SDK configuration under "NES Component Settings"
+To display the NES output, please connect a 320x240 ili9341-based SPI display to the ESP32, specify the pins in the SDK configuration under "NES Component Settings"
 
 PSX Controller
 --------------
